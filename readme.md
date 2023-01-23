@@ -1,5 +1,6 @@
 # Starnet++
 
 ```sh
-brew install audibleblink/starnet2cli
+brew tap audibleblink/starnet2cli
+brew install starnet2cli
 ```
