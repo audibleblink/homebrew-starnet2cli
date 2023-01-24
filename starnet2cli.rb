@@ -21,13 +21,13 @@ class Starnet2cli < Formula
     (bin/"starnet++").write <<~EOS
       #!/bin/sh
 
+      # delete the symlink on process exit
       cleanup() {
         rm -f starnet2_weights.pb
       }
       trap cleanup RETURN EXIT SIGINT SIGKILL
 
-      # the binary statically defines the weight path
-      # so we have to link it to the CWD
+      # the binary hardcodes the weights path so we have to symlink it to the CWD
       ln -sf "#{share}/starnet2_weights.pb" . 
 
       # define a load path since the libs are not in the same dir as the bin
@@ -36,13 +36,15 @@ class Starnet2cli < Formula
   end
 
   def caveats
-    <<~EOS
-      If this an M1/M2 mac, starnet2 requires Rosetta 2 to be installed. If you've
-      installed x64_86 applications previously, starnet2 may already work. If not,
-      you can install Rosetta 2 manually with:
+    unless Hardware::CPU.arm?
+      <<~EOS
+        StarNet2 is not an ARM binary and requires Rosetta 2. If you've
+        installed x64_86 applications previously, StarNet2 may already work. If not,
+        you can install Rosetta 2 manually with:
 
-      /usr/sbin/softwareupdate --install-rosetta
-    EOS
+          /usr/sbin/softwareupdate --install-rosetta
+      EOS
+    end
   end
 
   test do
