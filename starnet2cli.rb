@@ -9,14 +9,14 @@ class Starnet2cli < Formula
   depends_on :macos
 
   def install
+    chmod 0755, "starnet++"
+    libexec.install "starnet++"
+
+    # use libexec over lib because these are x86_64 dylibs and ARM users
+    # may also install libtensorflow through homebrew, creating a conflict
     libexec.install "libtensorflow.2.dylib"
     libexec.install "libtensorflow_framework.2.dylib"
     share.install "starnet2_weights.pb"
-
-    # Patch the Homebrew libexec path into the binary
-    system "install_name_tool -add_rpath #{libexec} starnet++"
-    chmod 0755, "starnet++"
-    libexec.install "starnet++"
 
     (bin/"starnet++").write <<~EOS
       #!/bin/sh
@@ -29,7 +29,9 @@ class Starnet2cli < Formula
       # the binary statically defines the weight path
       # so we have to link it to the CWD
       ln -sf "#{share}/starnet2_weights.pb" . 
-      command "#{libexec}/starnet++" "$@"
+
+      # define a load path since the libs are not in the same dir as the bin
+      DYLD_LIBRARY_PATH=#{libexec} command "#{libexec}/starnet++" "$@"
     EOS
   end
 
