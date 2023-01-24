@@ -4,7 +4,7 @@ class Starnet2cli < Formula
   url "https://starnetastro.com/wp-content/uploads/2022/03/StarNetv2CLI_MacOS.zip"
   version "2"
   sha256 "35f0c11f49a1bde466e317565e75beb32b57ebfead85379c23cc3953c1c42fc7"
-  license :puclic_domain
+  license :public_domain
 
   depends_on :macos
 
