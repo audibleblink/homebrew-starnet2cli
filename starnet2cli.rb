@@ -38,12 +38,14 @@ class Starnet2cli < Formula
   def caveats
     if Hardware::CPU.arm?
       <<~EOS
+
+        \e[0;32;49m+ ATTENTION ARM (M1/M2) USERS\e[0m
+
         StarNet2 is not an ARM binary and requires Rosetta 2. If you've
         installed x64_86 applications previously, StarNet2 may already work. If not,
         you can install Rosetta 2 manually with:
 
           /usr/sbin/softwareupdate --install-rosetta
-
 
       EOS
     end
